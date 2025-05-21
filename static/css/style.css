@@ -1,0 +1,184 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+/* Base Reset & Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f4f7f9;
+  color: #2c3e50;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+/* Navigation Bar */
+nav {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #34495e;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #dceefb;
+  color: #1b4f72;
+}
+
+/* Page Container */
+main {
+  background-color: #ffffff;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2e4053;
+  font-size: 2rem;
+  border-bottom: 2px solid #3498db;
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
+/* Form Inputs */
+form input[type="text"],
+form input[type="password"],
+form input[type="date"],
+form input[type="time"],
+form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid #ccd6dd;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fdfefe;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: #5dade2;
+  box-shadow: 0 0 8px rgba(93, 173, 226, 0.2);
+  outline: none;
+}
+
+/* Buttons */
+button, .btn {
+  background-color: #3498db;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover, .btn:hover {
+  background-color: #2980b9;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 1.2rem;
+  border: 1px solid #e5e8ec;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Lists */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  background-color: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Links */
+a {
+  color: #2980b9;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #1b4f72;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  nav {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  main {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  button, .btn {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

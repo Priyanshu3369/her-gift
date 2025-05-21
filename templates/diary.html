@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  body {
+    background: #fdfaf5;
+    font-family: 'Georgia', serif;
+    color: #3e2c23;
+  }
+
+  .diary-container {
+    background: #fffdf9;
+    border: 1px solid #e0d6ca;
+    border-radius: 12px;
+    padding: 3rem 4rem;
+    max-width: 850px;
+    margin: 4rem auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    background-image: repeating-linear-gradient(to bottom,
+      #fffdf9,
+      #fffdf9 28px,
+      #f4efe8 29px);
+    background-size: 100% 30px;
+    line-height: 1.7;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2.3rem;
+    color: #5a3e2b;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-group label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #5b4233;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  textarea.form-control {
+    background: transparent;
+    border: 1.5px solid #d3b8a2;
+    border-radius: 10px;
+    min-height: 180px;
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
+    padding: 1rem;
+    color: #3e2c23;
+    line-height: 1.6;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+
+  textarea.form-control:focus {
+    border-color: #b38a6b;
+    box-shadow: 0 0 10px rgba(179, 138, 107, 0.2);
+    outline: none;
+  }
+
+  .btn-primary {
+    background-color: #a97459;
+    border-color: #8b5e3c;
+    font-weight: bold;
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background-color: #8b5e3c;
+    box-shadow: 0 4px 10px rgba(139, 94, 60, 0.2);
+  }
+
+  .btn-outline-info {
+    border: 1.5px solid #bbb;
+    color: #555;
+    background-color: #f9f9f9;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .btn-outline-info:hover {
+    background-color: #eaeaea;
+    color: #333;
+  }
+
+  .alert-warning {
+    background-color: #fff7e3;
+    border-color: #f0d9b5;
+    color: #7a542e;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    margin-top: 1rem;
+  }
+
+  a {
+    color: #8b3a2c;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: #a34b39;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .diary-container {
+      padding: 2.5rem 3rem;
+      margin: 3rem 1.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary, .btn-outline-info {
+      font-size: 0.9rem;
+      padding: 0.5rem 1.2rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .diary-container {
+      padding: 1.5rem 1.5rem;
+      margin: 2rem 1rem;
+      border-radius: 10px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    textarea.form-control {
+      min-height: 130px;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+    }
+
+    .btn-primary, .btn-outline-info {
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+    }
+  }
+</style>
+
+<div class="diary-container">
+  <h2>📖 My Personal Diary</h2>
+
+  {% if not diary_unlocked %}
+    <div class="alert alert-warning">
+      <p>This diary is locked. <a href="{{ url_for('diary_unlock') }}">Unlock it here 🔐</a></p>
+    </div>
+  {% else %}
+    <!-- New Entry Form -->
+    <form method="POST" class="mb-4 mt-4" novalidate>
+      <div class="form-group">
+        <label for="content"><strong>Write your thoughts:</strong></label>
+        <textarea name="content" id="content" rows="8" class="form-control" required>{{ content }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Save Entry</button>
+    </form>
+
+    <!-- View Today's Entry Button -->
+    <div class="text-center mt-4">
+      <a href="{{ url_for('view_diary_entry', date=today) }}" class="btn btn-outline-info" role="button">
+        📅 View Today's Entry
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

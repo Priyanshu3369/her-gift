@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unlock Love Notes 🔐</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+    <main class="container mt-5 text-center" role="main" aria-label="Unlock Love Notes Form">
+        <h2 class="mb-4">Enter Password to View Love Notes 💖</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="d-inline-block w-100" style="max-width: 400px;" aria-label="Password unlock form">
+            <div class="mb-3">
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="form-control" 
+                    placeholder="Password" 
+                    required 
+                    aria-required="true" 
+                    aria-label="Password input"
+                    autofocus
+                >
+            </div>
+            <button class="btn btn-primary w-100" type="submit" aria-label="Unlock love notes">Unlock 💫</button>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* Page background: gentle pink pastel gradient */
+  body {
+    background: linear-gradient(135deg, #fceef3, #f7dede);
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: #4a2c2a;
+  }
+
+  /* Container styling */
+  .notes-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1.8rem 2rem;
+    background: rgba(255, 240, 246, 0.95); /* slightly transparent for layering effect */
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(255, 182, 193, 0.35);
+    color: #4a2c2a;
+  }
+
+  /* Headings */
+  h2#notes-heading {
+    color: #c9184a;
+    font-weight: 700;
+    margin-bottom: 1.8rem;
+    text-align: center;
+  }
+
+  /* Form inputs and textarea */
+  form.note-form textarea,
+  form.note-form input[type="text"] {
+    border: 2px solid #f7c2d0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+  form.note-form textarea:focus,
+  form.note-form input[type="text"]:focus {
+    border-color: #c9184a;
+    outline: none;
+  }
+
+  /* Button */
+  form.note-form button.btn-add-note {
+    background-color: #c9184a;
+    border: none;
+    color: white;
+    padding: 0.75rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  form.note-form button.btn-add-note:hover {
+    background-color: #a3113c;
+  }
+
+  /* Notes cards container */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Individual note cards */
+  .cards article.card {
+    background: #fff7fb;
+    border: 2px solid #f7c2d0;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 4px 10px rgba(255, 182, 193, 0.25);
+    color: #5c2e2e;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .cards article.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(255, 182, 193, 0.4);
+  }
+
+  /* Note text */
+  .cards article.card p {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    word-wrap: break-word;
+  }
+  .cards article.card small {
+    font-weight: 600;
+    color: #9d4edd;
+    margin-bottom: 1rem;
+  }
+
+  /* Buttons inside cards */
+  .cards article.card .actions {
+    margin-top: auto;
+    display: flex;
+    gap: 1rem;
+  }
+  .cards article.card .actions a.btn-edit,
+  .cards article.card .actions a.btn-delete {
+    flex: 1;
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .cards article.card .actions a.btn-edit {
+    background-color: #9d4edd;
+  }
+  .cards article.card .actions a.btn-edit:hover {
+    background-color: #7b36c3;
+  }
+  .cards article.card .actions a.btn-delete {
+    background-color: #c9184a;
+  }
+  .cards article.card .actions a.btn-delete:hover {
+    background-color: #a3113c;
+  }
+
+  /* No notes message */
+  .cards p.no-notes-message {
+    text-align: center;
+    font-style: italic;
+    color: #a95c7b;
+    grid-column: 1 / -1;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 900px) {
+    .notes-section {
+      max-width: 90vw;
+      padding: 1.5rem 1.5rem;
+    }
+
+    .cards {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .notes-section {
+      padding: 1.2rem 1rem;
+    }
+
+    h2#notes-heading {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    form.note-form textarea,
+    form.note-form input[type="text"] {
+      font-size: 1rem;
+      padding: 0.6rem 0.8rem;
+    }
+
+    form.note-form button.btn-add-note {
+      font-size: 1rem;
+      padding: 0.6rem;
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .cards article.card {
+      padding: 1rem 1.2rem;
+      min-height: auto;
+    }
+
+    .cards article.card p {
+      font-size: 1rem;
+    }
+
+    .cards article.card small {
+      font-size: 0.85rem;
+    }
+
+    .cards article.card .actions a.btn-edit,
+    .cards article.card .actions a.btn-delete {
+      font-size: 0.9rem;
+      padding: 0.4rem 0;
+    }
+  }
+
+  @media (max-width: 350px) {
+    h2#notes-heading {
+      font-size: 1.5rem;
+    }
+
+    form.note-form textarea,
+    form.note-form input[type="text"] {
+      font-size: 0.9rem;
+    }
+
+    form.note-form button.btn-add-note {
+      font-size: 0.9rem;
+    }
+
+    .cards article.card p {
+      font-size: 0.95rem;
+    }
+
+    .cards article.card small {
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+<section class="notes-section" aria-labelledby="notes-heading">
+
+  <h2 id="notes-heading">📝 Memory Notes</h2>
+
+  <form method="POST" class="note-form" aria-label="Add a new note">
+    <label for="content" class="visually-hidden">Note content</label>
+    <textarea
+      id="content"
+      name="content"
+      placeholder="Write something..."
+      required
+      rows="4"
+      aria-required="true"
+    ></textarea>
+
+    <label for="tag" class="visually-hidden">Note tag</label>
+    <input
+      type="text"
+      id="tag"
+      name="tag"
+      placeholder="Tag (e.g., 🛒 Shopping, 📞 Calls)"
+      aria-label="Note tag"
+    >
+
+    <button
+      type="submit"
+      class="btn-add-note"
+      aria-label="Add note"
+    >
+      Add Note
+    </button>
+  </form>
+
+  <div class="cards" role="list" aria-live="polite" aria-relevant="additions removals">
+    {% for note in notes %}
+      <article class="card" role="listitem" aria-label="Note">
+        <p>{{ note[1] }}</p>
+        {% if note[2] %}
+          <small>{{ note[2] }}</small>
+        {% endif %}
+        <div class="actions">
+          <a href="{{ url_for('edit_note', note_id=note[0]) }}" class="btn-edit" aria-label="Edit note">
+            ✏️ Edit
+          </a>
+          <a href="{{ url_for('delete_note', note_id=note[0]) }}" class="btn-delete" aria-label="Delete note">
+            ❌ Delete
+          </a>
+        </div>
+      </article>
+    {% else %}
+      <p class="no-notes-message">No notes yet. Add one above! ❤️</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

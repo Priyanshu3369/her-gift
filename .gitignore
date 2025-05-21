@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# SQLite database files
+*.db
+
+# Migrations or temp files (if applicable)
+migrations/
+*.log
+
+# VSCode and other IDE/editor folders
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

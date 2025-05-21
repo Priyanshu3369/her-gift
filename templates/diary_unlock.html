@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h3>🔓 Unlock Diary</h3>
+    <form method="POST">
+      <div class="mb-3">
+        <label for="password" class="form-label">Enter Diary Password</label>
+        <input type="password" class="form-control" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-success">Unlock</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

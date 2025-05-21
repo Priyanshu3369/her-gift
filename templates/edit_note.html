@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section aria-labelledby="edit-note-heading" class="edit-note-section" style="max-width: 600px; margin: auto;">
+    <h2 id="edit-note-heading">✏️ Edit Note</h2>
+
+    <form method="POST" aria-label="Edit note form">
+      <label for="content" class="visually-hidden">Note content</label>
+      <textarea 
+        id="content" 
+        name="content" 
+        required 
+        rows="5"
+        aria-required="true"
+        aria-describedby="content-desc"
+      >{{ note[1] }}</textarea>
+      <small id="content-desc" class="form-text text-muted">Update the content of your note here.</small>
+
+      <label for="tag" class="visually-hidden">Note tag</label>
+      <input 
+        type="text" 
+        id="tag" 
+        name="tag" 
+        value="{{ note[2] or '' }}" 
+        placeholder="Tag (e.g., 🛒 Shopping, 📞 Calls)" 
+        aria-label="Note tag"
+      >
+
+      <button type="submit" class="btn btn-primary mt-3">Update</button>
+    </form>
+
+    <p class="mt-4">
+      <a href="{{ url_for('notes') }}" aria-label="Back to Notes">← Back to Notes</a>
+    </p>
+  </section>
+{% endblock %}

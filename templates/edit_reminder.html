@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+  <section style="max-width: 500px; margin: auto;">
+    <h2>Edit Reminder</h2>
+    <form method="POST" aria-label="Edit reminder form">
+      <div class="mb-3">
+        <label for="title" class="form-label">Reminder Title</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          class="form-control" 
+          value="{{ reminder[1] }}" 
+          required 
+          aria-required="true"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="remind_at" class="form-label">Date and Time</label>
+        <input 
+          type="datetime-local" 
+          id="remind_at" 
+          name="remind_at" 
+          class="form-control" 
+          value="{{ reminder[2] | replace(' ', 'T') }}" 
+          required 
+          aria-required="true"
+        >
+      </div>
+      <button type="submit" class="btn btn-success">Update</button>
+      <a href="{{ url_for('reminders') }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+  </section>
+{% endblock %}

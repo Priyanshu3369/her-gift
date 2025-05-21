@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <style>
+    /* Global box-sizing for easier width control */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* Background for entire page */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f9e4eb, #f1c6d0);
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      padding: 1rem; /* Padding so card doesn't touch edges */
+    }
+
+    @keyframes floatPetals {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+    .petal {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      background: url('https://cdn-icons-png.flaticon.com/512/616/616408.png') no-repeat center/contain;
+      opacity: 0.15;
+      pointer-events: none;
+      animation: floatPetals 20s linear infinite;
+      filter: drop-shadow(0 0 1px #d46a84);
+      will-change: transform;
+      z-index: 1;
+    }
+    .petal:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 25s; }
+    .petal:nth-child(2) { left: 40%; animation-delay: 6s; animation-duration: 30s; }
+    .petal:nth-child(3) { left: 70%; animation-delay: 12s; animation-duration: 22s; }
+    .petal:nth-child(4) { left: 85%; animation-delay: 4s; animation-duration: 28s; }
+    .petal:nth-child(5) { left: 25%; animation-delay: 10s; animation-duration: 27s; }
+
+    .welcome-container {
+      max-width: 600px;       /* max width for larger screens */
+      width: 90%;             /* flexible width for smaller screens */
+      margin: 5rem auto 6rem;
+      text-align: center;
+      color: #5a3e4a;
+      background: linear-gradient(135deg, #fbe9f9, #f4d7e7);
+      padding: 3.5rem 2.5rem 4.5rem;
+      border-radius: 30px;
+      box-shadow: 0 12px 30px rgba(180, 100, 130, 0.3);
+      border: 1.5px solid #f0c6d6;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box; /* include padding and border in width */
+      z-index: 2;
+    }
+    .welcome-container h2 {
+      font-size: 3.4rem;
+      margin-bottom: 0.3rem;
+      color: #d46a84;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 4px rgba(212, 106, 132, 0.6);
+      word-break: break-word;
+    }
+    .welcome-container p.subtitle {
+      font-size: 1.4rem;
+      margin-bottom: 2.5rem;
+      font-style: italic;
+      color: #96586e;
+      text-shadow: 0 1px 2px rgba(150, 80, 100, 0.25);
+    }
+    .welcome-container blockquote {
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: #a66583;
+      margin-bottom: 3rem;
+      border-left: 6px solid #d46a84;
+      padding-left: 1.2rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      text-shadow: 0 1px 2px rgba(165, 101, 131, 0.4);
+      word-wrap: break-word;
+    }
+    .welcome-container img.panda-img {
+      width: 160px;
+      max-width: 40vw;
+      margin: 0 auto 3rem;
+      filter: drop-shadow(0 6px 8px rgba(150, 80, 100, 0.35));
+      border-radius: 20px;
+      transition: transform 0.4s ease;
+      cursor: default;
+      box-shadow: 0 0 15px rgba(212, 106, 132, 0.3);
+      display: block;
+    }
+    .welcome-container img.panda-img:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(212, 106, 132, 0.6);
+    }
+    .welcome-container a.btn-love-notes {
+      background-color: #d46a84;
+      color: white;
+      padding: 1rem 3rem;
+      font-weight: 700;
+      font-size: 1.35rem;
+      border-radius: 40px;
+      text-decoration: none;
+      box-shadow: 0 8px 22px rgba(212, 106, 132, 0.75);
+      display: inline-block;
+      transition: background-color 0.35s ease, box-shadow 0.35s ease;
+      user-select: none;
+      letter-spacing: 0.05em;
+    }
+    .welcome-container a.btn-love-notes:hover {
+      background-color: #b24f69;
+      box-shadow: 0 12px 30px rgba(178, 79, 105, 0.85);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 700px) {
+      .welcome-container {
+        padding: 2.5rem 1.5rem 3rem;
+        margin: 3rem auto 4rem;
+      }
+      .welcome-container h2 {
+        font-size: 2.4rem;
+        letter-spacing: 1px;
+      }
+      .welcome-container p.subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
+      }
+      .welcome-container blockquote {
+        font-size: 1rem;
+        max-width: 90%;
+        margin-bottom: 2.5rem;
+        padding-left: 1rem;
+      }
+      .welcome-container img.panda-img {
+        width: 120px;
+        max-width: 35vw;
+        margin-bottom: 2rem;
+      }
+      .welcome-container a.btn-love-notes {
+        font-size: 1.1rem;
+        padding: 0.9rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .welcome-container h2 {
+        font-size: 1.8rem;
+        letter-spacing: 0.8px;
+      }
+      .welcome-container p.subtitle {
+        font-size: 1rem;
+      }
+      .welcome-container blockquote {
+        font-size: 0.9rem;
+        padding-left: 0.8rem;
+      }
+      .welcome-container a.btn-love-notes {
+        font-size: 1rem;
+        padding: 0.8rem 2rem;
+      }
+      .petal {
+        width: 28px;
+        height: 28px;
+        opacity: 0.1;
+      }
+    }
+  </style>
+
+  <div class="welcome-container" role="main" aria-label="Welcome to RememberMe">
+    {% if session['user_name'] %}
+      <h2>Welcome back, {{ session['user_name'] }} 💖</h2>
+    {% else %}
+      <h2>Welcome to RememberMe 💖</h2>
+    {% endif %}
+
+    <p class="subtitle">This is your personal memory and reminder space — built with love by me.</p>
+
+    <blockquote>
+      “Where there is love, there are always memories.”
+    </blockquote>
+
+    <img class="panda-img" 
+      src="https://img.freepik.com/free-vector/cute-panda-with-love-sign-hand-cartoon-vector-icon-illustration-animal-nature-icon-concept-isolated_138676-5903.jpg?ga=GA1.1.945945960.1747427341&semt=ais_hybrid&w=740" 
+      alt="Cute panda holding a love sign cartoon" 
+      loading="lazy" 
+      width="160" height="160" 
+    />
+
+    <a href="/love-notes" class="btn-love-notes" aria-label="Go to Love Notes page">
+      Go to Love Notes 💌
+    </a>
+  </div>
+
+  <!-- Floating rose petals -->
+  <div class="petal" style="top: 110vh;"></div>
+  <div class="petal" style="top: 130vh;"></div>
+  <div class="petal" style="top: 115vh;"></div>
+  <div class="petal" style="top: 125vh;"></div>
+  <div class="petal" style="top: 120vh;"></div>
+{% endblock %}

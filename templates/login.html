@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  body {
+    background: radial-gradient(circle at top left, #fff0f5, #ffe4ea, #fbd2df);
+    background-attachment: fixed;
+    background-size: cover;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ffafc9 0%, #ffccd9 100%);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(45deg);
+    animation: drift 8s infinite linear;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  @keyframes drift {
+    0% {
+      transform: translateY(0) rotate(45deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100vh) rotate(90deg);
+      opacity: 0;
+    }
+  }
+
+  .login-card {
+    background: linear-gradient(135deg, #fff2f5, #fce3eb);
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(200, 100, 130, 0.2);
+    border: 1px solid #f2c9d6;
+    padding: 2rem;
+    opacity: 0;
+    animation: fadeIn 1.2s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  .login-card h4 {
+    color: #c06080;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(192, 96, 128, 0.3);
+  }
+
+  .form-label {
+    color: #a05b74;
+    font-weight: 600;
+  }
+
+  .btn-pink {
+    background-color: #c06080;
+    border: none;
+    font-weight: bold;
+  }
+
+  .btn-pink:hover {
+    background-color: #a34766;
+  }
+
+  .register-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: #85425d;
+  }
+
+  .register-link a {
+    color: #c06080;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<!-- Floating Petals -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    for (let i = 0; i < 25; i++) {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.top = -20 + 'px';
+      petal.style.animationDuration = 6 + Math.random() * 5 + 's';
+      petal.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(petal);
+    }
+  });
+</script>
+
+<!-- Login Form -->
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card login-card mt-5">
+      <h4 class="text-center mb-4">Login to RememberMe 💖</h4>
+      <form method="POST" action="/login">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="username" id="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="d-grid">
+          <button class="btn btn-pink">Login</button>
+        </div>
+      </form>
+      <div class="register-link">
+        Don't have an account? <a href="/register">Sign up here</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

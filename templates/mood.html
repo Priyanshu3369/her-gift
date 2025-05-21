@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #d9e4f5 0%, #fef6f9 100%);
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Nunito', 'Poppins', sans-serif;
+    color: #334e68;
+  }
+
+  .mood-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #f9fafb;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(180, 180, 200, 0.2);
+  }
+
+  .mood-container h2,
+  .mood-container h3 {
+    font-weight: 700;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #5a86ad;
+    /* soft blue */
+  }
+
+  h3 {
+    margin-bottom: 1.5rem;
+    color: #8aa5c1;
+    /* lighter blue */
+  }
+
+  .affirmation-alert {
+    border-left: 6px solid #82aaff;
+    /* pastel blue */
+    background-color: #dbe9ff;
+    /* very light blue */
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .flash-message {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    background-color: #ffe3e3;
+    color: #b94a4a;
+  }
+
+  form.mood-form {
+    margin-bottom: 3rem;
+  }
+
+  .mood-radiogroup {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 2rem;
+  }
+
+  .mood-radiogroup label {
+    cursor: pointer;
+    background: #e9f0ff;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .mood-radiogroup input[type="radio"]:checked+label,
+  .mood-radiogroup label:hover {
+    background-color: #82aaff;
+    color: white;
+  }
+
+  .mood-radiogroup input[type="radio"] {
+    display: none;
+    /* hide default radio button */
+  }
+
+  button.save-mood {
+    border-radius: 16px;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+    padding: 0.75rem 3rem;
+    font-size: 1.3rem;
+    background-color: #5a86ad;
+    color: white;
+    border: none;
+  }
+
+  button.save-mood:hover {
+    background-color: #3a5c7a;
+  }
+
+  .already-submitted-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #7a5a5a;
+    margin-top: 3rem;
+    font-style: italic;
+  }
+
+  hr.divider {
+    margin: 3rem 0;
+    border-color: #d1dbe7;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .mood-container {
+      max-width: 90vw;
+      padding: 1.5rem;
+      margin: 2rem auto;
+    }
+
+    .mood-radiogroup {
+      font-size: 1.6rem;
+      gap: 1rem;
+    }
+
+    button.save-mood {
+      font-size: 1.1rem;
+      padding: 0.5rem 1.5rem;
+    }
+
+    .already-submitted-msg {
+      font-size: 1.1rem;
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mood-container {
+      padding: 1rem 1rem 1.5rem 1rem;
+      margin: 1.5rem auto;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .mood-radiogroup {
+      flex-wrap: wrap;
+      font-size: 1.4rem;
+      gap: 0.8rem;
+    }
+
+    .mood-radiogroup label {
+      flex: 1 1 30%;
+      text-align: center;
+      padding: 0.4rem 0.5rem;
+    }
+
+    button.save-mood {
+      font-size: 1rem;
+      padding: 0.5rem 1.2rem;
+      width: 100%;
+    }
+
+    .already-submitted-msg {
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    hr.divider {
+      margin: 2rem 0;
+    }
+  }
+
+  @media (max-width: 320px) {
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    .already-submitted-msg {
+      font-size: 0.95rem;
+    }
+
+    button.save-mood {
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+    }
+  }
+
+  #moodChart {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 250px;
+  }
+</style>
+
+<div class="mood-container" role="main" aria-label="Mood tracking section">
+  <h2>🧘‍♀️ How Are You Feeling Today?</h2>
+
+  {% if affirmation %}
+  <div class="affirmation-alert" role="region" aria-live="polite">
+    <strong>💬 Today's Affirmation:</strong><br>
+    <span class="fs-5">{{ affirmation }}</span>
+  </div>
+  {% endif %}
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="flash-messages mt-3 mb-4" role="alert">
+    {% for message in messages %}
+    <div class="flash-message">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  {% if not already_submitted %}
+  <form method="POST" class="mood-form" aria-label="Mood selection form">
+    <div class="mood-radiogroup" role="radiogroup" aria-required="true" aria-label="Select your mood">
+      {% for emoji in ['😊', '😐', '😔', '😡', '😍'] %}
+      <input type="radio" id="mood-{{ loop.index }}" name="mood" value="{{ emoji }}" required>
+      <label for="mood-{{ loop.index }}">{{ emoji }}</label>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <button type="submit" class="save-mood">💾 Save Mood</button>
+    </div>
+  </form>
+  {% else %}
+  <p class="already-submitted-msg">💖 You've already saved today's mood. Come back tomorrow!</p>
+  {% endif %}
+
+  <hr class="divider" role="separator">
+
+  <h3>📈 Your Mood This Week</h3>
+  <canvas id="moodChart" width="400" height="200" aria-label="Mood line chart" role="img"></canvas>
+</div>
+
+<script id="mood-json" type="application/json">
+  {{ moods|tojson|safe }}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const moodData = JSON.parse(document.getElementById("mood-json").textContent);
+  const labels = [];
+  const moodPoints = [];
+
+  const moodMap = { "😊": 3, "😐": 2, "😔": 1, "😡": 0, "😍": 4 };
+  const moodLabelMap = { 0: "😡", 1: "😔", 2: "😐", 3: "😊", 4: "😍" };
+
+  // Date format options (e.g. "May 20")
+  const options = { month: 'short', day: 'numeric' };
+
+  moodData.forEach(entry => {
+    const dateObj = new Date(entry.date);
+    labels.push(dateObj.toLocaleDateString(undefined, options)); // Real date labels
+    moodPoints.push(entry.mood ? moodMap[entry.mood] : null);
+  });
+
+  const ctx = document.getElementById('moodChart').getContext('2d');
+  const moodChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Mood Level',
+        data: moodPoints,
+        fill: false,
+        borderColor: '#5a86ad',
+        backgroundColor: '#82aaff',
+        tension: 0.3,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        borderWidth: 3,
+        pointBackgroundColor: '#82aaff',
+        pointHoverBackgroundColor: '#5a86ad'
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          min: 0,
+          max: 4,
+          ticks: {
+            stepSize: 1,
+            callback: function(value) { return moodLabelMap[value] || ''; }
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const val = context.parsed.y;
+              return `Mood: ${moodLabelMap[val] || ''}`;
+            }
+          }
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+</script>
+
+
+{% endblock %}

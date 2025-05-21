@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  body {
+    background: #fdfaf5;
+    font-family: Georgia, serif;
+    color: #3e2c23;
+  }
+
+  .diary-container {
+    background: #fffdf9;
+    border: 1px solid #e0d6ca;
+    border-radius: 12px;
+    padding: 3rem 4rem;
+    max-width: 850px;
+    margin: 4rem auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    background-image: repeating-linear-gradient(to bottom,
+      #fffdf9,
+      #fffdf9 28px,
+      #f4efe8 29px);
+    background-size: 100% 30px;
+    line-height: 1.7;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2.3rem;
+    color: #5a3e2b;
+    margin-bottom: 2.5rem;
+  }
+
+  .entry-content {
+    white-space: pre-line;
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-left: 4px solid #d3b8a2;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+    word-break: break-word;
+  }
+
+  .list-group {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .list-group-item {
+    background-color: #fffdf9;
+    border: 1px solid #dbc9b5;
+    font-size: 1.05rem;
+    padding: 12px 18px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    color: #3e2c23;
+    transition: background-color 0.2s ease;
+    display: block;
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  .list-group-item:hover {
+    background-color: #f1ebe4;
+    text-decoration: none;
+  }
+
+  .btn-outline-primary,
+  .btn-outline-secondary {
+    border: 1.5px solid #a48c75;
+    color: #5b4034;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: #fffaf5;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  .btn-outline-primary:hover,
+  .btn-outline-secondary:hover {
+    background-color: #efe6dd;
+    color: #3b2a22;
+  }
+
+  .alert-warning {
+    background-color: #fff7e3;
+    border-color: #f0d9b5;
+    color: #7a542e;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  a {
+    color: #8b3a2c;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: #a34b39;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .diary-container {
+      padding: 2.5rem 3rem;
+      margin: 3rem 1.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .entry-content,
+    .list-group-item {
+      font-size: 1rem;
+    }
+
+    .btn-outline-primary,
+    .btn-outline-secondary {
+      font-size: 0.9rem;
+      padding: 0.45rem 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .diary-container {
+      padding: 1.5rem 1.5rem;
+      margin: 2rem 1rem;
+      border-radius: 10px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .entry-content {
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .list-group-item {
+      font-size: 0.95rem;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+    }
+
+    .btn-outline-primary,
+    .btn-outline-secondary {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+    }
+  }
+</style>
+
+<div class="diary-container" role="main" aria-live="polite" aria-relevant="additions removals">
+  {% if date and content %}
+    <h2>📅 Entry for {{ date }}</h2>
+    <article class="entry-content mt-4" tabindex="0">
+      <p>{{ content }}</p>
+    </article>
+    <div class="text-center mt-4">
+      <a href="{{ url_for('view_entries') }}" class="btn btn-outline-secondary" role="button" tabindex="0">← Back to All Entries</a>
+    </div>
+
+  {% elif entries %}
+    <h2>📖 Your Diary Entries</h2>
+    <nav class="list-group mt-4" aria-label="List of diary entries">
+      {% for entry in entries %}
+        <a href="{{ url_for('view_diary_entry', date=entry['entry_date']) }}"
+          class="list-group-item list-group-item-action" tabindex="0">
+          🗓️ {{ entry['entry_date'] }}
+        </a>
+      {% endfor %}
+    </nav>
+    <div class="text-center mt-4">
+      <a href="{{ url_for('diary') }}" class="btn btn-outline-primary" role="button" tabindex="0">✍️ Write New Entry</a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-warning text-center mt-4" role="alert">
+      No diary entries yet. <a href="{{ url_for('diary') }}">Write your first one</a>!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

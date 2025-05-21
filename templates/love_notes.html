@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/love_notes.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+  rel="stylesheet">
+
+<style>
+  /* Responsive CSS for the whole page and cards */
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+  }
+
+  .romantic-title {
+    font-size: 2.8rem;
+  }
+
+  .logout-button {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .romantic-card {
+    padding: 1.5rem 2rem 2rem 2rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .heart-glow {
+    font-size: 2rem;
+    top: 12px;
+    right: 20px;
+  }
+
+  .romantic-card-header {
+    font-size: 1.8rem;
+  }
+
+  .romantic-card-body {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  /* Medium devices (tablets, 768px and down) */
+  @media (max-width: 768px) {
+    .container {
+      max-width: 90vw;
+      padding: 1rem;
+    }
+
+    .romantic-title {
+      font-size: 2.2rem;
+    }
+
+    .romantic-card {
+      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+    }
+
+    .heart-glow {
+      font-size: 1.8rem;
+      top: 10px;
+      right: 15px;
+    }
+
+    .romantic-card-header {
+      font-size: 1.5rem;
+    }
+
+    .romantic-card-body {
+      font-size: 1rem;
+    }
+  }
+
+  /* Small devices (phones, 480px and down) */
+  @media (max-width: 480px) {
+    .romantic-title {
+      font-size: 1.8rem;
+    }
+
+    .romantic-card {
+      padding: 1rem 1rem 1.2rem 1rem;
+    }
+
+    .heart-glow {
+      font-size: 1.5rem;
+      top: 8px;
+      right: 12px;
+    }
+
+    .romantic-card-header {
+      font-size: 1.3rem;
+    }
+
+    .romantic-card-body {
+      font-size: 0.95rem;
+    }
+  }
+
+  /* Extra small devices (very small phones, 320px and down) */
+  @media (max-width: 320px) {
+    .romantic-title {
+      font-size: 1.5rem;
+    }
+
+    .romantic-card-header {
+      font-size: 1.1rem;
+    }
+
+    .romantic-card-body {
+      font-size: 0.9rem;
+    }
+  }
+
+  .romantic-cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+  }
+
+  .romantic-card {
+    flex: 1 1 250px;
+    max-width: 300px;
+    background: #fff0f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(255, 0, 102, 0.2);
+    position: relative;
+  }
+
+  .romantic-cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .romantic-card {
+    flex: 1 1 280px;
+    max-width: 320px;
+    background: #fff8f8;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(255, 102, 102, 0.2);
+    padding: 1.8rem 2rem 2.2rem 2rem;
+    position: relative;
+    color: #6b3a3a;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .romantic-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(255, 102, 102, 0.35);
+  }
+
+  .heart-glow {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.9rem;
+    color: #ff4d6d;
+    filter: drop-shadow(0 0 6px #ff4d6d88);
+    user-select: none;
+  }
+
+  .romantic-card-header {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: #c94f56;
+  }
+
+  .romantic-card-body {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  /* Responsive tweaks for smaller screens */
+  @media (max-width: 768px) {
+    .romantic-card {
+      flex: 1 1 90%;
+      max-width: 100%;
+    }
+
+    .heart-glow {
+      top: 12px;
+      right: 15px;
+      font-size: 1.6rem;
+    }
+
+    .romantic-card-header {
+      font-size: 1.4rem;
+    }
+
+    .romantic-card-body {
+      font-size: 1rem;
+    }
+  }
+
+  .lock-again-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1.5rem;
+    background-color: #ff4d6d;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 8px rgba(255, 77, 109, 0.4);
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+  }
+
+  .lock-again-btn:hover {
+    background-color: #e04362;
+    box-shadow: 0 6px 12px rgba(224, 67, 98, 0.6);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="text-end" style="margin-bottom: 2rem;">
+  <a href="{{ url_for('love_notes_logout') }}" class="btn btn-danger">
+    🔐 Lock Again
+  </a>
+</div>
+<div class="romantic-cards-wrapper">
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #1</div>
+    <div class="romantic-card-body">
+      Every day with you feels like the safest place I’ve ever known. Your smile lights up my darkest moments, and your
+      presence fills my heart with warmth. I’m so grateful for every moment we share. 😚🌟
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #2</div>
+    <div class="romantic-card-body">
+      I don’t need grand gestures or perfect moments to know I’m loved. Just your hand in mine and your voice next to me
+      is everything I could ever ask for. You make ordinary days feel extraordinary. 💕✨
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #3</div>
+    <div class="romantic-card-body">
+      The little things you do—your gentle touch, your kind words—show me how deeply you care. They make me feel so
+      special every single day. Thank you for being my constant support and love. 🌹💖
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #4</div>
+    <div class="romantic-card-body">
+      I love how we can be completely ourselves around each other—no pretending, no fear. You accept me, flaws and all,
+      and that’s the truest form of love I’ve ever known. Thank you for loving me just as I am. 🤗💞
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #5</div>
+    <div class="romantic-card-body">
+      Sometimes words fail to express how much you mean to me, but my heart always knows. You are my best friend, my
+      partner, and my forever love. I cherish you more than you’ll ever realize. 💘🌷
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #6</div>
+    <div class="romantic-card-body">
+      Thank you for loving me even on my worst days, for standing by me when everything feels hard. Your love gives me
+      strength and hope, and I promise to always do the same for you. Together, we are unstoppable. 💪❤️‍🔥
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #7</div>
+    <div class="romantic-card-body">
+      With you, I’ve learned that love isn’t just about happiness, but about growing together through every challenge
+      and joy life brings. I’m so thankful to walk this journey with you by my side. Forever and always. 🌻💖
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #8</div>
+    <div class="romantic-card-body">
+      Your laughter is my favorite sound, and your happiness is my greatest wish. Seeing you smile makes all my worries
+      disappear. You truly complete my world. 😊💞
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #9</div>
+    <div class="romantic-card-body">
+      I love how you listen, really listen, and care about what I have to say. That kind of love and attention makes me
+      feel so valued and understood. Thank you for being you. 🥺❤️
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #10</div>
+    <div class="romantic-card-body">
+      Being with you feels easy and natural. Like we’re two pieces that fit perfectly. I’ve never felt this comfortable
+      or sure in anyone else’s presence before. 👫💓
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #11</div>
+    <div class="romantic-card-body">
+      You have a way of making even the simplest moments memorable. Sitting next to you, talking, or just being silent
+      together — it all means the world to me. 🌙✨
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #12</div>
+    <div class="romantic-card-body">
+      I’m grateful for the trust and honesty we share. It’s rare and precious, and it makes me believe in us even more
+      every day. Thank you for being so open with me. 💬💖
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #13</div>
+    <div class="romantic-card-body">
+      Even when life gets tough, knowing I have you by my side makes everything feel possible. Your strength and
+      kindness inspire me every day. We’re stronger together. 💪💞
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #14</div>
+    <div class="romantic-card-body">
+      I never thought I could feel this happy and peaceful, but your love has brought that calm into my life. Thank you
+      for being my peace in this busy world. 🌸🕊️
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #15</div>
+    <div class="romantic-card-body">
+      You accept me in ways no one else ever has. That acceptance gives me courage to be better every day. I want to be
+      the best for you, always. ❤️‍🔥🌟
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #16</div>
+    <div class="romantic-card-body">
+      I love dreaming about our future together — the life we’ll build, the memories we’ll make. With you, I feel
+      hopeful and excited for everything ahead. 🌅💑
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #17</div>
+    <div class="romantic-card-body">
+      Your kindness touches everyone around you, but it means the most to me. You’ve changed my life in the gentlest,
+      most beautiful way. Thank you for loving me. 💖🌷
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #18</div>
+    <div class="romantic-card-body">
+      I feel so lucky that out of everyone, you chose me to share your heart with. That trust is a gift I will never
+      take for granted. Forever grateful for you. 🎁❤️
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #19</div>
+    <div class="romantic-card-body">
+      When I think of love, I think of you — simple, steady, true. You’ve taught me that love is more than feelings;
+      it’s commitment and care every day. 💞🤝
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #20</div>
+    <div class="romantic-card-body">
+      No matter where life takes us, I want you to know I’m here — ready to face anything as long as it’s with you. You
+      are my forever. 🌍❤️
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #21</div>
+    <div class="romantic-card-body">
+      Your smile brightens even the dullest days, and your love fills my heart with joy. I never want to take this for
+      granted. Thank you for being my happiness. 😄💖
+    </div>
+  </div>
+
+  <div class="romantic-card">
+    <div class="heart-glow">❤️</div>
+    <div class="romantic-card-header">Love Note #22</div>
+    <div class="romantic-card-body">
+      With every day that passes, my love for you grows deeper. You’re my home, my heart, my everything. I’m so thankful
+      to have you in my life. Always and forever. 🏡❤️‍🔥
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

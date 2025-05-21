@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>RememberMe</title>
+
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  {% block head %}{% endblock %}
+
+  <style>
+    /* Popup Reminder */
+    .reminder-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #fff8e1;
+      border: 2px solid #ffc107;
+      border-radius: 12px;
+      padding: 1em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      animation: fadein 0.5s ease;
+      z-index: 9999;
+    }
+
+    .popup-content h3 {
+      margin: 0 0 0.5em 0;
+      color: #ff6f00;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .confetti {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      font-size: 1.5rem;
+      animation: confetti 2s ease-out forwards;
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(200px);
+        opacity: 0;
+      }
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #d46a84;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+      background-color: #e0f7fa;
+      outline: none;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      user-select: none;
+      position: relative;
+      width: 30px;
+      height: 25px;
+    }
+
+    .hamburger,
+    .hamburger::before,
+    .hamburger::after {
+      content: "";
+      display: block;
+      background-color: #d46a84;
+      height: 3px;
+      border-radius: 2px;
+      position: absolute;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .hamburger::before {
+      top: 0;
+    }
+
+    .hamburger::after {
+      bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        background-color: #fff0f6;
+        position: absolute;
+        top: 60px;
+        right: 1.5rem;
+        width: 200px;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(212, 106, 132, 0.3);
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+    }
+
+    .nav-toggle.active .hamburger {
+      background-color: transparent;
+    }
+
+    .nav-toggle.active .hamburger::before {
+      transform: rotate(45deg);
+      top: 50%;
+    }
+
+    .nav-toggle.active .hamburger::after {
+      transform: rotate(-45deg);
+      bottom: 50%;
+    }
+  </style>
+
+  <script>
+    function showPopup(title, time) {
+      const popup = document.createElement("div");
+      popup.className = "reminder-popup";
+      popup.innerHTML = `
+        <div class="popup-content">
+          <h3>🔔 Reminder</h3>
+          <p><strong>${title}</strong></p>
+          <small>⏰ ${time}</small>
+        </div>
+      `;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 10000);
+    }
+
+    function checkReminders() {
+      fetch("/check_reminders")
+        .then(res => res.json())
+        .then(data => {
+          if (data.reminders.length > 0) {
+            data.reminders.forEach(r => {
+              showPopup(r[1], r[2]);
+            });
+          }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      checkReminders(); // Check on page load
+      setInterval(checkReminders, 30000); // Every 30 sec
+    });
+  </script>
+</head>
+
+<body>
+  {% if session.get('user_id') %}
+  <!-- Responsive Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('home') }}" class="nav-logo">RememberMe</a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+      <div class="nav-menu" id="primary-menu">
+        <a href="{{ url_for('home') }}" class="nav-link">🏠 Home</a>
+        <a href="{{ url_for('notes') }}" class="nav-link">📝 Notes</a>
+        <a href="{{ url_for('reminders') }}" class="nav-link">⏰ Reminders</a>
+        <a href="{{ url_for('love_notes') }}" class="nav-link">💌 Love Notes</a>
+        <a href="{{ url_for('mood') }}" class="nav-link">🧘 Mood</a>
+        <a href="{{ url_for('planner') }}" class="nav-link">📅 Planner</a>
+        <a href="{{ url_for('diary') }}" class="nav-link">📖 Diary</a>
+        <a href="{{ url_for('logout') }}" class="nav-link">🔓 Logout</a>
+
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="container my-4">
+
+    {# Global (non-love note) messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category != 'love_note' %}
+    <div class="alert alert-info">
+      <p>{{ message }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {# Show love_note flashes only on love_notes route #}
+    {% if request.endpoint == 'love_notes' %}
+    {% with messages = get_flashed_messages(category_filter=['love_note']) %}
+    {% if messages %}
+    {% for message in messages %}
+    <div
+      style="background-color: #fff0f5; border: 2px dashed pink; padding: 1em; border-radius: 12px; text-align: center;">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+
+  {% if request.endpoint == 'love_notes' %}
+  <!-- Random Love Note (only on love_notes page) -->
+  <div id="love-note" class="love-note-card" style="max-width: 600px; margin: 2em auto;"></div>
+  <script>
+    fetch("/random-love-note")
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          document.getElementById("love-note").innerHTML = `
+            <div style="
+              background-color: #fff0f5;
+              border: 2px dashed pink;
+              padding: 1.2em;
+              border-radius: 14px;
+              text-align: center;
+              animation: fadein 0.8s ease-in;
+            ">
+              💌 <em>${data.message}</em>
+            </div>
+          `;
+        }
+      });
+  </script>
+  {% endif %}
+
+
+  <!-- Toggle Navbar -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleButton = document.querySelector('.nav-toggle');
+      const menu = document.querySelector('.nav-menu');
+
+      toggleButton.addEventListener('click', () => {
+        const expanded = toggleButton.getAttribute('aria-expanded') === 'true';
+        toggleButton.setAttribute('aria-expanded', !expanded);
+        menu.classList.toggle('active');
+        toggleButton.classList.toggle('active');
+      });
+    });
+  </script>
+</body>
+
+</html>
