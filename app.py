@@ -5,7 +5,7 @@ import sqlite3
 from functools import wraps
 import os
 from dotenv import load_dotenv
-load_dotenv()  # loads variables from .env into os.environ
+load_dotenv()
 
 app = Flask(__name__)
 DB_NAME = "notes.db"
@@ -136,8 +136,8 @@ def login_required(f):
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form.get("name")  # Make sure HTML form uses name="name"
-        password_raw = request.form.get("password")
+        username = request.form.get("username", "").strip().lower()
+        password_raw = request.form.get("password", "").strip()
 
         if not username or not password_raw:
             flash("Please fill in all required fields.")
@@ -155,36 +155,47 @@ def register():
         except sqlite3.IntegrityError:
             flash("Username already exists. Try another.")
             return render_template("register.html")
+        except Exception as e:
+            print("Registration error:", e)
+            flash("Unexpected error during registration.")
+            return render_template("register.html")
 
     return render_template("register.html")
 
 
+
 # ---------------------- Login Route ----------------------
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip().lower()
+        password = request.form.get("password", "").strip()
 
         if not username or not password:
             flash("Please fill in all required fields.")
             return render_template("login.html")
 
-        with sqlite3.connect(DB_NAME) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT id, password FROM users WHERE username = ?", (username,))
-            user = cursor.fetchone()
+        try:
+            with sqlite3.connect(DB_NAME) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT id, password FROM users WHERE username = ?", (username,))
+                user = cursor.fetchone()
+        except Exception as e:
+            flash("Database error. Please try again later.")
+            return render_template("login.html")
 
         if user and check_password_hash(user[1], password):
-            session.clear()  # Clear any existing session first
+            session.clear()  # clear old session
             session["user_id"] = user[0]
-            session["username"] = username  # Optional: store username
+            session["username"] = username
             flash("Welcome back!")
             return redirect(url_for("home"))
         else:
-            flash("Invalid credentials.")
+            flash("Invalid username or password.")
 
     return render_template("login.html")
+
 
 
 # ---------------------- Logout Route ----------------------
